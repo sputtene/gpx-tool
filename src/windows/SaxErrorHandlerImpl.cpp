@@ -1,54 +1,56 @@
 #include "SaxErrorHandlerImpl.h"
 
+#include "../common.h"
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-SAXErrorHandlerImpl::SAXErrorHandlerImpl()
+SaxErrorHandlerImpl::SaxErrorHandlerImpl()
 {
 
 }
 
-SAXErrorHandlerImpl::~SAXErrorHandlerImpl()
+SaxErrorHandlerImpl::~SaxErrorHandlerImpl()
 {
 
 }
 
-HRESULT STDMETHODCALLTYPE SAXErrorHandlerImpl::error(
-            /* [in] */ ISAXLocator __RPC_FAR *pLocator,
-            /* [in] */ const wchar_t * pwchErrorMessage,
-            /* [in] */ HRESULT errCode)
-{
-    return S_OK;
-}
-
-HRESULT STDMETHODCALLTYPE SAXErrorHandlerImpl::fatalError(
-            /* [in] */ ISAXLocator __RPC_FAR *pLocator,
-            /* [in] */ const wchar_t * pwchErrorMessage,
-            /* [in] */ HRESULT errCode)
+HRESULT STDMETHODCALLTYPE SaxErrorHandlerImpl::error(
+            /* [in] */ ISAXLocator __RPC_FAR *UNUSED(pLocator),
+            /* [in] */ const wchar_t * UNUSED(pwchErrorMessage),
+            /* [in] */ HRESULT UNUSED(errCode))
 {
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE SAXErrorHandlerImpl::ignorableWarning(
-            /* [in] */ ISAXLocator __RPC_FAR *pLocator,
-            /* [in] */ const wchar_t * pwchErrorMessage,
-            /* [in] */ HRESULT errCode)
+HRESULT STDMETHODCALLTYPE SaxErrorHandlerImpl::fatalError(
+            /* [in] */ ISAXLocator __RPC_FAR *UNUSED(pLocator),
+            /* [in] */ const wchar_t * UNUSED(pwchErrorMessage),
+            /* [in] */ HRESULT UNUSED(errCode))
 {
     return S_OK;
 }
 
-long __stdcall SAXErrorHandlerImpl::QueryInterface(const struct _GUID &,void ** )
+HRESULT STDMETHODCALLTYPE SaxErrorHandlerImpl::ignorableWarning(
+            /* [in] */ ISAXLocator __RPC_FAR *UNUSED(pLocator),
+            /* [in] */ const wchar_t * UNUSED(pwchErrorMessage),
+            /* [in] */ HRESULT UNUSED(errCode))
+{
+    return S_OK;
+}
+
+long __stdcall SaxErrorHandlerImpl::QueryInterface(const struct _GUID &,void ** )
 {
     return 0;
 }
 
-unsigned long __stdcall SAXErrorHandlerImpl::AddRef()
+unsigned long __stdcall SaxErrorHandlerImpl::AddRef()
 {
     return 0;
 }
 
-unsigned long __stdcall SAXErrorHandlerImpl::Release()
+unsigned long __stdcall SaxErrorHandlerImpl::Release()
 {
     return 0;
 }

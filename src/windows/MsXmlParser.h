@@ -11,6 +11,7 @@ class MsXmlParser : public XmlSaxParserBackend
 {
 public:
     MsXmlParser();
+    virtual ~MsXmlParser();
 
 
     // Interface implementation

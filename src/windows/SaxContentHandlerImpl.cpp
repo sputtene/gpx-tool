@@ -1,128 +1,131 @@
 #include "SaxContentHandlerImpl.h"
 
+#include "../common.h"
+
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
 
-SAXContentHandlerImpl::SAXContentHandlerImpl()
+SaxContentHandlerImpl::SaxContentHandlerImpl()
 {
 }
 
-SAXContentHandlerImpl::~SAXContentHandlerImpl()
+SaxContentHandlerImpl::~SaxContentHandlerImpl()
 {
 }
 
 
 
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::putDocumentLocator(
-        /* [in] */ ISAXLocator __RPC_FAR *pLocator
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::putDocumentLocator(
+        /* [in] */ ISAXLocator __RPC_FAR *UNUSED(pLocator)
         )
 {
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::startDocument()
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::startDocument()
 {
     return S_OK;
 }
 
 
 
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::endDocument( void)
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::endDocument()
 {
     return S_OK;
 }
 
 
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::startPrefixMapping(
-        /* [in] */ const wchar_t __RPC_FAR *pwchPrefix,
-        /* [in] */ int cchPrefix,
-        /* [in] */ const wchar_t __RPC_FAR *pwchUri,
-        /* [in] */ int cchUri)
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::startPrefixMapping(
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchPrefix),
+        /* [in] */ int UNUSED(cchPrefix),
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchUri),
+        /* [in] */ int UNUSED(cchUri))
 {
     return S_OK;
 }
 
 
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::endPrefixMapping(
-        /* [in] */ const wchar_t __RPC_FAR *pwchPrefix,
-        /* [in] */ int cchPrefix)
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::endPrefixMapping(
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchPrefix),
+        /* [in] */ int UNUSED(cchPrefix))
 {
     return S_OK;
 }
 
 
 
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::startElement(
-        /* [in] */ const wchar_t __RPC_FAR *pwchNamespaceUri,
-        /* [in] */ int cchNamespaceUri,
-        /* [in] */ const wchar_t __RPC_FAR *pwchLocalName,
-        /* [in] */ int cchLocalName,
-        /* [in] */ const wchar_t __RPC_FAR *pwchRawName,
-        /* [in] */ int cchRawName,
-        /* [in] */ ISAXAttributes __RPC_FAR *pAttributes)
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::startElement(
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchNamespaceUri),
+        /* [in] */ int UNUSED(cchNamespaceUri),
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchLocalName),
+        /* [in] */ int UNUSED(cchLocalName),
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchRawName),
+        /* [in] */ int UNUSED(cchRawName),
+        /* [in] */ ISAXAttributes __RPC_FAR *UNUSED(pAttributes))
 {
     return S_OK;
 }
 
 
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::endElement(
-        /* [in] */ const wchar_t __RPC_FAR *pwchNamespaceUri,
-        /* [in] */ int cchNamespaceUri,
-        /* [in] */ const wchar_t __RPC_FAR *pwchLocalName,
-        /* [in] */ int cchLocalName,
-        /* [in] */ const wchar_t __RPC_FAR *pwchRawName,
-        /* [in] */ int cchRawName)
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::endElement(
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchNamespaceUri),
+        /* [in] */ int UNUSED(cchNamespaceUri),
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchLocalName),
+        /* [in] */ int UNUSED(cchLocalName),
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchRawName),
+        /* [in] */ int UNUSED(cchRawName))
 {
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::characters(
-        /* [in] */ const wchar_t __RPC_FAR *pwchChars,
-        /* [in] */ int cchChars)
-{
-    return S_OK;
-}
-
-
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::ignorableWhitespace(
-        /* [in] */ const wchar_t __RPC_FAR *pwchChars,
-        /* [in] */ int cchChars)
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::characters(
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchChars),
+        /* [in] */ int UNUSED(cchChars))
 {
     return S_OK;
 }
 
 
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::processingInstruction(
-        /* [in] */ const wchar_t __RPC_FAR *pwchTarget,
-        /* [in] */ int cchTarget,
-        /* [in] */ const wchar_t __RPC_FAR *pwchData,
-        /* [in] */ int cchData)
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::ignorableWhitespace(
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchChars),
+        /* [in] */ int UNUSED(cchChars))
 {
     return S_OK;
 }
 
 
-HRESULT STDMETHODCALLTYPE SAXContentHandlerImpl::skippedEntity(
-        /* [in] */ const wchar_t __RPC_FAR *pwchVal,
-        /* [in] */ int cchVal)
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::processingInstruction(
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchTarget),
+        /* [in] */ int UNUSED(cchTarget),
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchData),
+        /* [in] */ int UNUSED(cchData))
 {
     return S_OK;
 }
 
 
-long __stdcall SAXContentHandlerImpl::QueryInterface(const struct _GUID &riid,void ** ppvObject)
+HRESULT STDMETHODCALLTYPE SaxContentHandlerImpl::skippedEntity(
+        /* [in] */ const wchar_t __RPC_FAR *UNUSED(pwchVal),
+        /* [in] */ int UNUSED(cchVal))
+{
+    return S_OK;
+}
+
+
+long __stdcall SaxContentHandlerImpl::QueryInterface(const struct _GUID &UNUSED(riid) ,void ** UNUSED(ppvObject))
 {
     return 0;
 }
 
-unsigned long __stdcall SAXContentHandlerImpl::AddRef()
+unsigned long __stdcall SaxContentHandlerImpl::AddRef()
 {
     return 0;
 }
 
-unsigned long __stdcall SAXContentHandlerImpl::Release()
+unsigned long __stdcall SaxContentHandlerImpl::Release()
 {
     return 0;
 }

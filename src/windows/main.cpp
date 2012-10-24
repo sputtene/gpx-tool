@@ -1,7 +1,6 @@
 #include "../common.h"
 
 #include <windows.h>
-#include <tchar.h>
 
 #include <utility>
 #include <cstdlib>
@@ -16,7 +15,7 @@
 
 //// Forward declarations
 // Command line handling
-std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine);
+std::pair<int, wchar_t **> ConvertCommandline(const PTSTR& szCmdLine);
 
 
 int APIENTRY _tWinMain(HINSTANCE hInst, HINSTANCE UNUSED(hPrevInst), PTSTR szCmdLine, int iCmdShow)
@@ -30,7 +29,7 @@ int APIENTRY _tWinMain(HINSTANCE hInst, HINSTANCE UNUSED(hPrevInst), PTSTR szCmd
 
 
     // Initialize GpxTool controller. This will create the GUI.
-    std::pair<int, char **> argcv = ConvertCommandline(szCmdLine);
+    std::pair<int, wchar_t **> argcv = ConvertCommandline(szCmdLine);
     GpxTool::Init(argcv.first, argcv.second);
     free(argcv.second);
     GpxTool::Setup(Gui::Instance(), MsXmlParser::Instance());
@@ -39,14 +38,14 @@ int APIENTRY _tWinMain(HINSTANCE hInst, HINSTANCE UNUSED(hPrevInst), PTSTR szCmd
 }
 
 
-std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine)
+std::pair<int, wchar_t **> ConvertCommandline(const PTSTR& szCmdLine)
 {
     // Program name is argv[0]
-    char *programName = new char[MAX_PATH];
+    wchar_t *programName = new wchar_t[MAX_PATH];
     GetModuleFileName(NULL, programName, MAX_PATH);
 
     int argc = 1;
-    size_t cmdLineLen = strlen(programName) + 1;    // argv[0] (including terminating \0)
+    size_t cmdLineLen = wcslen(programName) + 1;    // argv[0] (including terminating \0)
 
     // Count arguments
     DEBUG("Counting arguments");
@@ -82,19 +81,19 @@ std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine)
 
     // Allocate contiguous memory block for argv* and its contents
     DEBUG("Allocating memory block for argv")
-    char **argv = (char**) malloc(argc * sizeof(char*) + cmdLineLen * sizeof(char));
+    wchar_t **argv = (wchar_t**) malloc(argc * sizeof(wchar_t*) + cmdLineLen * sizeof(wchar_t));
     DEBUG("... done.");
 
     // Find arguments, store them and pointers to them in argv
-    char **argvp = argv;                    // pointer to argv arguments
-    char *argvps = (char*)(argvp + argc);   // argv arguments themselves
+    wchar_t **argvp = argv;                     // pointer to argv arguments
+    wchar_t *argvps = (wchar_t*)(argvp + argc); // argv arguments themselves
     DEBUG("Argv pointers: argvp: " << &argvp << "; argvps: " << &argvps);
 
     // argv[0]: program name
     DEBUG("Storing argv[0] (" << programName << ")");
     argvp[0] = argvps;
-    _stprintf(argvps, "%s", programName);
-    argvps += strlen(programName) + 1;
+    swprintf(argvps, L"%s", programName);
+    argvps += wcslen(programName) + 1;
     DEBUG("... done.");
 
     // actual arguments
@@ -116,7 +115,7 @@ std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine)
         // conversion from w_char_t to char if needed.
         while ((*cmdLineChar != ' ') && (*cmdLineChar != '\0'))
         {
-            _stprintf(argvps++, "%hc", *cmdLineChar++);
+            swprintf(argvps++, L"%hc", *cmdLineChar++);
         }
 
         // ... and terminate with \0
@@ -124,5 +123,5 @@ std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine)
     }
     DEBUG("Stored " << currArgc << " arguments");
 
-    return std::pair<int, char **>(argc, argv);
+    return std::pair<int, wchar_t **>(argc, argv);
 }

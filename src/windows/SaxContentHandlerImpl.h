@@ -1,6 +1,8 @@
 #ifndef INC_SAX_CONTENT_HANDLER_IMPL
 #define INC_SAX_CONTENT_HANDLER_IMPL
 
+#include <msxml2.h>
+
 class SaxContentHandlerImpl : public ISAXContentHandler
 {
 public:

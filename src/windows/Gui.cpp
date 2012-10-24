@@ -5,6 +5,8 @@
 
 #include "../GpxTool.h"
 
+#include "util.h"
+
 #include <cassert>
 #include <string>
 #include <vector>
@@ -42,7 +44,7 @@ bool Gui::Setup(const HINSTANCE &hInst, const int &iCmdShow)
     catch (std::string &e)
     {
         MessageBox(NULL,
-                e.c_str(),
+                utf8tows(e).c_str(),
                 L"GPX Tool",
                 MB_OK | MB_ICONERROR);
 
@@ -68,10 +70,10 @@ void Gui::DoOpenGpx()
 
     ofn.lStructSize = sizeof(OPENFILENAME);
     ofn.hwndOwner = _hWnd;
-    ofn.lpstrFilter = _T("GPX files (*.gpx)\0"  "*.gpx\0"
+    ofn.lpstrFilter =   L"GPX files (*.gpx)\0"  "*.gpx\0"
                          "Text files (*.txt)\0" "*.txt\0"
                          "All files (*.*)\0"    "*.*\0"
-                         "\0");
+                         "\0";
     ofn.lpstrCustomFilter = NULL;
     ofn.nFilterIndex = 0;
     ofn.lpstrFile = filename;
@@ -83,7 +85,7 @@ void Gui::DoOpenGpx()
         | OFN_FILEMUSTEXIST
         | OFN_HIDEREADONLY
         | OFN_PATHMUSTEXIST;
-    ofn.lpstrDefExt = _T("gpx");
+    ofn.lpstrDefExt = L"gpx";
     ofn.FlagsEx = 0;
 
     if (!GetOpenFileName(&ofn))
@@ -97,8 +99,8 @@ void Gui::DoOpenGpx()
     for (PTCHAR pt = filename; *pt != 0; )
     {
         DEBUG("- '" << pt << "'");
-        filenames.push_back(pt);
-        pt += _tcslen(pt) + 1;
+        filenames.push_back(wstoutf8(pt));
+        pt += wcslen(pt) + 1;
     }
 
     if (filenames.size() > 1)
@@ -152,13 +154,13 @@ LRESULT Gui::OnCommand(const UINT &UNUSED(uMsg), const WPARAM &wParam, const LPA
         {
             int ret = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), _hWnd, AboutDlgProc);
             if(ret == IDOK){
-                MessageBox(_hWnd, "Dialog exited with IDOK.", "Notice", MB_OK | MB_ICONINFORMATION);
+                MessageBox(_hWnd, L"Dialog exited with IDOK.", L"Notice", MB_OK | MB_ICONINFORMATION);
             }
             else if(ret == IDCANCEL){
-                MessageBox(_hWnd, "Dialog exited with IDCANCEL.", "Notice", MB_OK | MB_ICONINFORMATION);
+                MessageBox(_hWnd, L"Dialog exited with IDCANCEL.", L"Notice", MB_OK | MB_ICONINFORMATION);
             }
             else if(ret == -1){
-                MessageBox(_hWnd, "Dialog failed!", "Error", MB_OK | MB_ICONINFORMATION);
+                MessageBox(_hWnd, L"Dialog failed!", L"Error", MB_OK | MB_ICONINFORMATION);
             }
         }
         break;
@@ -226,14 +228,14 @@ Gui::Gui(const HINSTANCE &hInst, const int &iCmdShow) :
     Window(hInst),
     _statusBar(0)
 {
-    this->Create(_T("GPX tool"), iCmdShow);
+    this->Create(L"GPX tool", iCmdShow);
 
     RECT clientRect;
     GetClientRect(_hWnd, &clientRect);
 
     _statusBar = CreateWindowEx(0,
             STATUSCLASSNAME,
-            _T(""),
+            L"",
             WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP,
             0,
             clientRect.bottom - clientRect.top - 20,

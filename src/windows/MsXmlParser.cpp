@@ -3,6 +3,7 @@
 #include "../GpxContents.h"
 
 #include "SaxHandler.h"
+#include "util.h"
 
 #include <cassert>
 
@@ -26,9 +27,9 @@ bool MsXmlParser::ParseFile(const std::string &filename)
 
     std::cout << "Parsing document: " << filename << std::endl;
 
-    HRESULT hr = _saxReader->parseURL(filename);
+    HRESULT hr = _saxReader->parseURL(utf8tows(filename).c_str());
 
-    std::cout << "Parse result code: " ,<< hr << std::endl;
+    std::cout << "Parse result code: " << hr << std::endl;
 
 
     return true;

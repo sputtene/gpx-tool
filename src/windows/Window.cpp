@@ -1,8 +1,8 @@
 #include "Window.h"
 #include "resource.h"
 #include "../debug.h"
+#include "util.h"
 
-#include <tchar.h>
 #include <cassert>
 
 #include <iostream>
@@ -194,7 +194,7 @@ ATOM Window::RegisterWindowClass(const HINSTANCE &hInst)
     wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName   = MAKEINTRESOURCE(IDR_MENU);
-    wcex.lpszClassName  = "GPX Tool";
+    wcex.lpszClassName  = L"GPX Tool";
     wcex.hIconSm        = NULL;
 
     _windowClass = RegisterClassEx(&wcex);

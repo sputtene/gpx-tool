@@ -1,6 +1,9 @@
 #ifndef INC_SAX_ERROR_HANDLER_IMPL
 #define INC_SAX_ERROR_HANDLER_IMPL
 
+#include <msxml2.h>
+
+
 class SaxErrorHandlerImpl : public ISAXErrorHandler
 {
 public:

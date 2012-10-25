@@ -11,11 +11,12 @@
 #include "Gui.h"
 #include "MsXmlParser.h"
 #include "../GpxTool.h"
+#include "util.h"
 
 
 //// Forward declarations
 // Command line handling
-std::pair<int, wchar_t **> ConvertCommandline(const PTSTR& szCmdLine);
+std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine);
 
 
 int APIENTRY _tWinMain(HINSTANCE hInst, HINSTANCE UNUSED(hPrevInst), PTSTR szCmdLine, int iCmdShow)
@@ -25,25 +26,41 @@ int APIENTRY _tWinMain(HINSTANCE hInst, HINSTANCE UNUSED(hPrevInst), PTSTR szCmd
     // parameters.
     Gui::Setup(hInst, iCmdShow);
 
-    MsXmlParser::Setup();
-
 
     // Initialize GpxTool controller. This will create the GUI.
-    std::pair<int, wchar_t **> argcv = ConvertCommandline(szCmdLine);
+    std::pair<int, char **> argcv = ConvertCommandline(szCmdLine);
     GpxTool::Init(argcv.first, argcv.second);
     free(argcv.second);
-    GpxTool::Setup(Gui::Instance(), MsXmlParser::Instance());
+    GpxTool::Setup(Gui::Instance(), new MsXmlParser());
 
     return GpxTool::MainLoop();
 }
 
 
-std::pair<int, wchar_t **> ConvertCommandline(const PTSTR& szCmdLine)
+std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine)
 {
     // Program name is argv[0]
     wchar_t *programName = new wchar_t[MAX_PATH];
     GetModuleFileName(NULL, programName, MAX_PATH);
 
+    // FIXME: Change logic so the following happens:
+    //   std::vector<std::string> cmdLine("");
+    //   cmdLine.push_back(programName);
+    //   size_t cmdLineLen = programName.length() + 1; // include terminating \0
+    //
+    //   for (all arguments in szCmdLine) {
+    //     std::string mbArg = wstoutf8(arg);
+    //     cmdLine.push_back(mbArg);
+    //     cmdLineLen += mbArg.length() + 1;
+    //   }
+    //
+    //   argc = cmdLine.size();
+    //   argv = malloc(...);
+    //   for (it = cmdLine.begin() .. cmdLine.end()) {
+    //     snprintf(argv, *it.length() + 1, "%s", *it.c_str());
+    //     argv += *it.length() + 1;
+    //   }
+    //   return std::pair<...,...>(argc, argv);
     int argc = 1;
     size_t cmdLineLen = wcslen(programName) + 1;    // argv[0] (including terminating \0)
 
@@ -81,18 +98,18 @@ std::pair<int, wchar_t **> ConvertCommandline(const PTSTR& szCmdLine)
 
     // Allocate contiguous memory block for argv* and its contents
     DEBUG("Allocating memory block for argv")
-    wchar_t **argv = (wchar_t**) malloc(argc * sizeof(wchar_t*) + cmdLineLen * sizeof(wchar_t));
+    char **argv = (char**) malloc(argc * sizeof(char*) + cmdLineLen * sizeof(char));
     DEBUG("... done.");
 
     // Find arguments, store them and pointers to them in argv
-    wchar_t **argvp = argv;                     // pointer to argv arguments
-    wchar_t *argvps = (wchar_t*)(argvp + argc); // argv arguments themselves
+    char **argvp = argv;                    // pointer to argv arguments
+    char *argvps = (char*)(argvp + argc);   // argv arguments themselves
     DEBUG("Argv pointers: argvp: " << &argvp << "; argvps: " << &argvps);
 
     // argv[0]: program name
     DEBUG("Storing argv[0] (" << programName << ")");
     argvp[0] = argvps;
-    swprintf(argvps, L"%s", programName);
+    sprintf(argvps, "%s", wstoutf8(programName).c_str());
     argvps += wcslen(programName) + 1;
     DEBUG("... done.");
 
@@ -112,16 +129,20 @@ std::pair<int, wchar_t **> ConvertCommandline(const PTSTR& szCmdLine)
         }
 
         // Copy argument to space pointed to by argv[] while performing
-        // conversion from w_char_t to char if needed.
+        // conversion from w_char_t to char.
+        std::wstring wsCmdLineArg(L"");
         while ((*cmdLineChar != ' ') && (*cmdLineChar != '\0'))
         {
-            swprintf(argvps++, L"%hc", *cmdLineChar++);
+            wsCmdLineArg += *cmdLineChar++;
         }
+        std::string mbCmdLineArg = wstoutf8(wsCmdLineArg);
+        sprintf(argvps, "%s", mbCmdLineArg.c_str());
+        argvps += sprintf(argvps, "%hc", *cmdLineChar++);
 
         // ... and terminate with \0
         *argvps++ = '\0';
     }
     DEBUG("Stored " << currArgc << " arguments");
 
-    return std::pair<int, wchar_t **>(argc, argv);
+    return std::pair<int, char **>(argc, argv);
 }

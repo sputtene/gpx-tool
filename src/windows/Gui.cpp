@@ -200,7 +200,7 @@ LRESULT Gui::OnSize(const UINT &UNUSED(uMsg), const WPARAM &UNUSED(wParam), cons
 }
 
 
-BOOL CALLBACK Gui::AboutDlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM UNUSED(lParam))
+INT_PTR CALLBACK Gui::AboutDlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM UNUSED(lParam))
 {
     switch(uMsg)
     {

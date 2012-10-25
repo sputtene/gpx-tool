@@ -35,10 +35,10 @@ ifneq ($(findstring $(TARGET), win32 win64),)
     # One of the windows targets is selected
     # Compiler and linker flags
     CXXFLAGS += -mwindows -fshort-wchar -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0500
- 	# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=40376
+    # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=40376
     CXXFLAGS += -municode -DUNICODE -D_UNICODE
     LDFLAGS  += -static-libgcc -static-libstdc++
-	LDLIBS   +=-lcomctl32
+    LDLIBS   += -lcomctl32 -lmsxml3
 
     # Extra files to compile
     EXE_SUFFIX  = .exe
@@ -48,8 +48,10 @@ ifneq ($(findstring $(TARGET), win32 win64),)
     # Use appropriate cross-compiler toolchain
     ifeq ($(TARGET), win32)
         TOOLCHAIN_PREFIX = i686-w64-mingw32-
+        #LDLIBS          += -L/usr/lib/i386-linux-gnu/wine/fakedlls
     else ifeq ($(TARGET), win64)
         TOOLCHAIN_PREFIX = x86_64-w64-mingw32-
+        #LDLIBS          += /usr/lib/x86_64-linux-gnu/wine/fakedlls
     else
         $(error Makefile error: $$TARGET = "$(TARGET)"
     endif

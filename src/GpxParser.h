@@ -15,6 +15,7 @@ public:
     GpxParser(XmlSaxParserBackend *xpb) :
         XmlSaxParser(xpb)
     { }
+    virtual ~GpxParser() {};
 
 
     // Perform parsing

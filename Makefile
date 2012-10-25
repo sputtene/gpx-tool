@@ -20,7 +20,7 @@ STRIP   = $(TOOLCHAIN_PREFIX)strip
 WINDRES = $(TOOLCHAIN_PREFIX)windres
 
 # Compiler and linker flags
-CXXFLAGS += -O3 -Wall -Wextra -pedantic
+CXXFLAGS += -O0 -Wall -Wextra -pedantic -ggdb3
 LDFLAGS  +=
 
 

@@ -9,7 +9,7 @@
 ##########
 # Files
 EXE      = gpx-tool$(EXE_SUFFIX)
-SOURCES  = $(wildcard src/*.cpp)
+SOURCES  = $(wildcard src/*.cpp) src/irrxml-1.2/src/irrXML.cpp
 OBJS     = $(patsubst %.cpp, %.o, $(filter %.cpp, $(SOURCES)))
 
 # Toolchain

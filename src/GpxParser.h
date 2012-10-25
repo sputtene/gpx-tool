@@ -5,21 +5,19 @@
 
 #include "XmlSaxParser.h"
 
-class XmlSaxParserBackend;
+#include "debug.h"
+
+
 class GpxContents;
 
 
 class GpxParser : public XmlSaxParser
 {
 public:
-    GpxParser(XmlSaxParserBackend *xpb) :
-        XmlSaxParser(xpb)
-    { }
+    GpxParser() { DEBUG("GpxParser instantiated: " << this); };
     virtual ~GpxParser() {};
 
-
-    // Perform parsing
-    virtual GpxContents ParseFile(const std::string &filename);
+    GpxContents ParseGpxFile(const std::string &filename);
 };
 
 

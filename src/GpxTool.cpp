@@ -17,12 +17,11 @@ void GpxTool::Init(int argc, char **argv)
 }
 
 
-void GpxTool::Setup(UserInterface *ui, XmlSaxParserBackend *xp)
+void GpxTool::Setup(UserInterface *ui)
 {
     assert(_instance);
 
     _instance->_userInterface = ui;
-    _instance->_gpxParser = new GpxParser(xp);
 }
 
 int GpxTool::MainLoop()
@@ -42,13 +41,13 @@ void GpxTool::ReadGpxFiles(const std::vector<std::string> &filenames)
     for (std::vector<std::string>::const_iterator it = filenames.begin(); it != filenames.end(); ++it)
     {
         DEBUG("- Reading file '" << *it << "'");
-        GpxContents gpxContents = _instance->_gpxParser->ParseFile(*it);
+        GpxContents gpxContents = _instance->_gpxParser->ParseGpxFile(*it);
     }
 }
 
 GpxTool::GpxTool(int argc, char **argv):
     _userInterface(0),
-    _gpxParser(0)
+    _gpxParser(new GpxParser())
 {
     DEBUG("argc: " << argc);
     for (int i = 0; i < argc; ++i)

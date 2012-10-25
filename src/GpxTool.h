@@ -6,9 +6,7 @@
 
 // Forward declarations
 class UserInterface;
-class XmlSaxParserBackend;
 class GpxParser;
-
 
 // Singleton: entry point for gpx-tool
 // This class must be inited from main() or equivalent.
@@ -17,7 +15,7 @@ class GpxTool
 public:
     // Setup
     static void Init(int argc, char **argv);
-    static void Setup(UserInterface *ui, XmlSaxParserBackend *xp);
+    static void Setup(UserInterface *ui);
 
     // Start processing
     static int MainLoop();
@@ -29,7 +27,7 @@ private:
     static GpxTool *_instance;
 
     UserInterface *_userInterface;
-    GpxParser *_gpxParser;
+    GpxParser     *_gpxParser;
 };
 
 #endif // INC_GPX_TOOL_H

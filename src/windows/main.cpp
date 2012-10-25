@@ -8,18 +8,17 @@
 
 #include "../debug.h"
 
-#include "Gui.h"
-#include "MsXmlParser.h"
 #include "../GpxTool.h"
+#include "Gui.h"
 #include "util.h"
 
 
 //// Forward declarations
 // Command line handling
-std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine);
+std::pair<int, char **> ConvertCommandline(wchar_t * const &szCmdLine);
 
 
-int APIENTRY _tWinMain(HINSTANCE hInst, HINSTANCE UNUSED(hPrevInst), PTSTR szCmdLine, int iCmdShow)
+int APIENTRY wWinMain(HINSTANCE hInst, HINSTANCE UNUSED(hPrevInst), wchar_t *szCmdLine, int iCmdShow)
 {
     // Set GUI parameters. This must be done before calling GpxTool_Init(),
     // because that will instantiate the GUI, which depends on these
@@ -31,13 +30,13 @@ int APIENTRY _tWinMain(HINSTANCE hInst, HINSTANCE UNUSED(hPrevInst), PTSTR szCmd
     std::pair<int, char **> argcv = ConvertCommandline(szCmdLine);
     GpxTool::Init(argcv.first, argcv.second);
     free(argcv.second);
-    GpxTool::Setup(Gui::Instance(), new MsXmlParser());
+    GpxTool::Setup(Gui::Instance());
 
     return GpxTool::MainLoop();
 }
 
 
-std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine)
+std::pair<int, char **> ConvertCommandline(wchar_t * const &szCmdLine)
 {
     // Program name is argv[0]
     wchar_t *programName = new wchar_t[MAX_PATH];
@@ -66,7 +65,7 @@ std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine)
 
     // Count arguments
     DEBUG("Counting arguments");
-    for (PTCHAR cmdLineChar = szCmdLine; *cmdLineChar != '\0';)
+    for (const wchar_t *cmdLineChar = szCmdLine; *cmdLineChar != L'\0';)
     {
         // Skip whitespace before real parameters
         while (*cmdLineChar == ' ')
@@ -115,7 +114,7 @@ std::pair<int, char **> ConvertCommandline(const PTSTR& szCmdLine)
 
     // actual arguments
     size_t currArgc = 1;
-    for (PTCHAR cmdLineChar = szCmdLine; *cmdLineChar != '\0';)
+    for (const wchar_t *cmdLineChar = szCmdLine; *cmdLineChar != L'\0';)
     {
         // Skip whitespace before actual parameter
         while (*cmdLineChar == ' ')

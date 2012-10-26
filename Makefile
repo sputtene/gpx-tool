@@ -13,11 +13,12 @@ SOURCES  = $(wildcard src/*.cpp) src/irrxml-1.2/src/irrXML.cpp
 OBJS     = $(patsubst %.cpp, %.o, $(filter %.cpp, $(SOURCES)))
 
 # Toolchain
-CPP     = $(TOOLCHAIN_PREFIX)cpp
-CXX     = $(TOOLCHAIN_PREFIX)g++
-LD      = $(TOOLCHAIN_PREFIX)ld
-STRIP   = $(TOOLCHAIN_PREFIX)strip
-WINDRES = $(TOOLCHAIN_PREFIX)windres
+CPP     = $(CROSS)cpp
+CC      = $(CROSS)gcc
+CXX     = $(CROSS)g++
+LD      = $(CROSS)ld
+STRIP   = $(CROSS)strip
+WINDRES = $(CROSS)windres
 
 # Compiler and linker flags
 CPPFLAGS += -MP -MD
@@ -48,9 +49,9 @@ ifneq ($(findstring $(TARGET), win32 win64),)
 
     # Use appropriate cross-compiler toolchain
     ifeq ($(TARGET), win32)
-        TOOLCHAIN_PREFIX = i686-w64-mingw32-
+        CROSS = i686-w64-mingw32-
     else ifeq ($(TARGET), win64)
-        TOOLCHAIN_PREFIX = x86_64-w64-mingw32-
+        CROSS = x86_64-w64-mingw32-
     else
         $(error Makefile error: $$TARGET = "$(TARGET)"
     endif
@@ -96,7 +97,7 @@ debug_makefile:
 	$(info SOURCES  = '$(SOURCES)')
 	$(info OBJS     = '$(OBJS)')
 	$(info )
-	$(info TOOLCHAIN_PREFIX = '$(TOOLCHAIN_PREFIX)')
+	$(info CROSS    = '$(CROSS)')
 	$(info CPP      = '$(CPP)')
 	$(info CXX      = '$(CXX)')
 	$(info LD       = '$(LD)')

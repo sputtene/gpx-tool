@@ -20,6 +20,7 @@ STRIP   = $(TOOLCHAIN_PREFIX)strip
 WINDRES = $(TOOLCHAIN_PREFIX)windres
 
 # Compiler and linker flags
+CPPFLAGS += -MP -MD
 CXXFLAGS += -O0 -Wall -Wextra -pedantic -ggdb3
 LDFLAGS  +=
 
@@ -84,24 +85,8 @@ $(OBJS): Makefile
 	@# TODO: implement --language <val>
 	$(WINDRES) -i $< -o $@
 
-%.d: %.cpp
-	@echo Generating dependencies for $<
-	@$(COMPILE.cpp) -MM $< -MF $@
-	@mv -f $@ $@.tmp
-	@sed -e 's|.*:|$*.o:|' < $@.tmp > $@
-	@sed -e 's/.*://' -e 's/\\$$//' < $@.tmp | fmt -1 | \
-		sed -e 's/^ *//' -e 's/$$/:/' >> $@
-	@rm -f $@.tmp
-
 %.d: %.rc
-	@echo Generating dependencies for $<
-	@# Use -x c, because otherwise gcc barfs on the .rc extension
-	@$(COMPILE.c) -x c -MM $< -MF $@
-	@mv -f $@ $@.tmp
-	@sed -e 's|.*:|$*.o:|' < $@.tmp > $@
-	@sed -e 's/.*://' -e 's/\\$$//' < $@.tmp | fmt -1 | \
-		sed -e 's/^ *//' -e 's/$$/:/' >> $@
-	@rm -f $@.tmp
+	$(CC) -xc -MP -M $< -MF $@
 
 debug_makefile:
 	$(info Makefile variables:)

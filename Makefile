@@ -83,11 +83,9 @@ $(EXE): $(OBJS)
 $(OBJS): Makefile
 
 %.o: %.rc %.h
+	$(CC) -xc -MP -M $< -MF $@
 	@# TODO: implement --language <val>
 	$(WINDRES) -i $< -o $@
-
-%.d: %.rc
-	$(CC) -xc -MP -M $< -MF $@
 
 debug_makefile:
 	$(info Makefile variables:)

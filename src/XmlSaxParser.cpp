@@ -9,30 +9,60 @@
 
 using namespace irr::io;
 
+XmlSaxParser::XmlSaxParser(unsigned int maxUnhandled) :
+    _maxUnhandled(maxUnhandled)
+{ }
 
 bool XmlSaxParser::ParseFile(const std::string &filename)
 {
     IrrXMLReader* xml = createIrrXMLReader(filename.c_str());
     DEBUG("Reading GPX file '" << filename << "' with parser '" << xml << "'");
-    unsigned int node_count = 0;
-    while (xml && xml->read())
+
+    _unhCount = 0;
+    bool rootNodeParsed = false;
+    while (xml && xml->read()
+            && (_maxUnhandled > 0) && (_unhCount <= _maxUnhandled))
     {
-        switch(xml->getNodeType())
+        EXML_NODE   nodeType = xml->getNodeType();
+        std::string nodeName = xml->getNodeName() ? xml->getNodeName() : "";
+        std::string nodeData = xml->getNodeData() ? xml->getNodeData() : "";
+
+        std::map<std::string, std::string> attributes;
+        for (int i = 0; i < xml->getAttributeCount(); ++i)
+        {
+            // Duplicate attributes cannot exist in a well-formed
+            // XML document, so don't check for them.
+            attributes[xml->getAttributeName(i)] = xml->getAttributeValue(i);
+        }
+
+        // Work around parser limitation: it reports a BOM as EXN_TEXT before
+        // the first node is parsed.
+        if (!rootNodeParsed && (nodeType != EXN_ELEMENT))
+        {
+            DEBUG("Skipping over garbage in XML file");
+            continue;
+        }
+
+        TRACE("Node:" << std::endl
+                << "Type: "  << nodeType << std::endl
+                << "Name: '" << nodeName << "'" << std::endl
+                << "Data: '" << nodeData << "'" << std::endl
+                << "Attr: "  << attributes.size());
+
+        switch(nodeType)
         {
             case EXN_ELEMENT:
-            {
-                // TODO: extract node attributes
-                start(xml->getNodeName());
-            }
+                start(nodeName, attributes);
+                rootNodeParsed = true;
+                if (xml->isEmptyElement()) end(nodeName);
                 break;
-            case EXN_ELEMENT_END:   this->end(xml->getNodeName());      break;
-            case EXN_NONE:          assert(0);                          break;
-            case EXN_TEXT:          this->text(xml->getNodeName());     break;
-            case EXN_COMMENT:       this->comment(xml->getNodeName());  break;
-            case EXN_CDATA:         this->cdata(xml->getNodeName());    break;
-            case EXN_UNKNOWN:       this->unknown();                    break;
+            case EXN_ELEMENT_END:   end(nodeName);      break;
+            case EXN_NONE:          assert(0);          break;
+            case EXN_TEXT:          text(nodeName);     break;
+            case EXN_COMMENT:       comment(nodeName);  break;
+            case EXN_CDATA:         cdata(nodeName);    break;
+            case EXN_UNKNOWN:       unknown(nodeData);  break;
         }
-        if (++node_count > 50) { delete xml; xml = 0; }
     }
 
     delete xml;

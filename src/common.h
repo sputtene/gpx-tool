@@ -11,4 +11,23 @@
 #  define UNUSED(x) (x)
 #endif
 
+
+#include <sstream>
+
+class bad_lexical_cast {};
+
+template<typename Target, typename Source>
+    Target lex_cast(Source arg)
+{
+    std::stringstream interpreter;
+    Target result;
+
+    if(!(interpreter << arg) ||
+            !(interpreter >> result) ||
+            !(interpreter >> std::ws).eof())
+        throw bad_lexical_cast();
+
+    return result;
+}
+
 #endif

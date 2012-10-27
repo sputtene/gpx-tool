@@ -2,6 +2,7 @@
 #define INC_XML_SAX_PARSER_H
 
 #include <string>
+#include <map>
 
 #include "common.h"
 
@@ -10,6 +11,7 @@
 class XmlSaxParser
 {
 public:
+    XmlSaxParser(unsigned int maxUnhandled = 0);
     virtual ~XmlSaxParser() {};
 
     // Start parsing
@@ -19,16 +21,23 @@ public:
 
 protected:
     // SAX callback functions
-    virtual void start      (const std::string &name) { TRACE("start: '" << name << "'"); return; };
-    virtual void end        (const std::string &name) { TRACE("end: '" << name << "'"); return; };
+    virtual void start      (const std::string &name,
+                             const std::map<std::string, std::string> &UNUSED(attr))
+                                                        { unhandled("start",   name); };
+    virtual void end        (const std::string &name)   { unhandled("end",     name); };
+    virtual void text       (const std::string &data)   { unhandled("text",    data); };
+    virtual void comment    (const std::string &data)   { unhandled("comment", data); };
+    virtual void cdata      (const std::string &data)   { unhandled("cdata",   data); };
+    virtual void unknown    (const std::string &data)   { unhandled("unknown", data); };
 
-    virtual void text       (const std::string &text) { TRACE("text: '" << text << "'"); return; };
+private:
+    void unhandled(const std::string &handler, const std::string &content = "<no content>")
+    {
+        TRACE("unhandled node " << ++_unhCount << " (" << handler << "): '" << content << "'");
+    }
 
-    virtual void comment    (const std::string &comment) { TRACE("comment: '" << comment << "'"); return; };
-
-    virtual void cdata      (const std::string &cdata) { TRACE("cdata: '" << cdata << "'"); return; };
-
-    virtual void unknown    () { TRACE("unknown: ???"); return; };
+    unsigned int _maxUnhandled;
+    unsigned int _unhCount;
 };
 
 #endif

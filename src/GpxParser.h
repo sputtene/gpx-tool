@@ -31,13 +31,6 @@ protected:
 #endif
 
 private:
-    // Data members
-    enum States
-    {
-        NONE,
-        GPX
-    };
-
     // State handler callback types and handler dispatch tables
     typedef void (GpxParser::*StartHandler  )(const std::string &name, const std::map<std::string, std::string> &attr);
     typedef void (GpxParser::*EndHandler    )(const std::string &name);
@@ -48,24 +41,30 @@ private:
 
     static void initializeDispatch();
 
-    static std::map<States, StartHandler>   _startDispatch;
-    static std::map<States, EndHandler>     _endDispatch;
-    static std::map<States, TextHandler>    _textDispatch;
-    static std::map<States, CommentHandler> _commentDispatch;
-    static std::map<States, CDataHandler>   _cDataDispatch;
-    static std::map<States, UnknownHandler> _unknownDispatch;
+    static std::map<std::string, StartHandler>   _startDispatch;
+    static std::map<std::string, EndHandler>     _endDispatch;
+    static std::map<std::string, TextHandler>    _textDispatch;
+    static std::map<std::string, CommentHandler> _commentDispatch;
+    static std::map<std::string, CDataHandler>   _cDataDispatch;
+    static std::map<std::string, UnknownHandler> _unknownDispatch;
 
     static bool _dispatchInitialized;
 
 
     // State dependent handlers
-    void start_none(const std::string &name, const std::map<std::string, std::string> &attr);
+    void start_gpx     (const std::string &name, const std::map<std::string, std::string> &attr);
+    void start_metadata(const std::string &name, const std::map<std::string, std::string> &attr);
+    void start_link    (const std::string &name, const std::map<std::string, std::string> &attr);
 
 
     void error(const std::string &msg = "<no message>");
 
 
-    std::stack<States> _state;
+    std::stack<std::string> _state;
+
+
+    // objects that represent parts of the parsed GPX file
+    GpxContents *_gpxContents;
 };
 
 

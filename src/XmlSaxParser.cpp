@@ -43,12 +43,6 @@ bool XmlSaxParser::ParseFile(const std::string &filename)
             continue;
         }
 
-        TRACE("Node:" << std::endl
-                << "Type: "  << nodeType << std::endl
-                << "Name: '" << nodeName << "'" << std::endl
-                << "Data: '" << nodeData << "'" << std::endl
-                << "Attr: "  << attributes.size());
-
         switch(nodeType)
         {
             case EXN_ELEMENT:

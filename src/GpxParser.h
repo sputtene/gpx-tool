@@ -2,7 +2,7 @@
 #define INC_GPX_PARSER_H
 
 #include <string>
-#include <stack>
+#include <vector>
 
 #include "XmlSaxParser.h"
 
@@ -39,14 +39,14 @@ private:
     typedef void (GpxParser::*CDataHandler  )(const std::string &data);
     typedef void (GpxParser::*UnknownHandler)(const std::string &data);
 
-    static void initializeDispatch();
+    static void initializeDispatch(const std::string &version = "");
 
-    static std::map<std::string, StartHandler>   _startDispatch;
-    static std::map<std::string, EndHandler>     _endDispatch;
-    static std::map<std::string, TextHandler>    _textDispatch;
-    static std::map<std::string, CommentHandler> _commentDispatch;
-    static std::map<std::string, CDataHandler>   _cDataDispatch;
-    static std::map<std::string, UnknownHandler> _unknownDispatch;
+    static std::map<std::string, StartHandler>   _dispatchStart;
+    static std::map<std::string, EndHandler>     _dispatchEnd;
+    static std::map<std::string, TextHandler>    _dispatchText;
+    static std::map<std::string, CommentHandler> _dispatchComment;
+    static std::map<std::string, CDataHandler>   _dispatchCData;
+    static std::map<std::string, UnknownHandler> _dispatchUnknown;
 
     static bool _dispatchInitialized;
 
@@ -60,8 +60,10 @@ private:
     void error(const std::string &msg = "<no message>");
 
 
-    std::stack<std::string> _state;
+    std::vector<std::string> _state;
 
+    // TODO tmp helper: remove
+    static void dispatchHelper(const char** const &cc_path, const size_t &n, const StartHandler &handler);
 
     // objects that represent parts of the parsed GPX file
     GpxContents *_gpxContents;

@@ -53,7 +53,7 @@ ifneq ($(findstring $(TARGET), win32 win64),)
     else ifeq ($(TARGET), win64)
         CROSS = x86_64-w64-mingw32-
     else
-        $(error Makefile error: $$TARGET = "$(TARGET)"
+        $(error Makefile error: $$TARGET = "$(TARGET)")
     endif
 else
     $(info Unknown target "$(TARGET)")
